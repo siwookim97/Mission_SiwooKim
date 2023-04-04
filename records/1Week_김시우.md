@@ -3,26 +3,35 @@
 ---
 
 ###미션 요구사항 분석 & 체크리스트
-매 주 제공되는 미션 별 요구사항을 기반으로 기능에 대한 분석을 진행한 후, 아래와 같은 체크리스트를 작성합니다.
-‘어떻게 개발을 진행 할 것인지에 대한 방향성’을 확인하는 과정이기 때문에 최대한 깊이있게 분석 후 진행해주시기 바랍니다.
+- [x] 호감목록 삭제하는 기능 추가
+  - [x] 호감목록 삭제 기능 테스트 코드 추가
+  - [x] LikeablePersonController 에서 LikeablePerson Entity 의 Id를 받아옴
+  - [x] Rq 로부터 가져온 Member Entity 의 instaMemberId 컬럼과 LikeablePerson 의 fromInstaMemberId 컬럼의 값이 같은지 확인 
+  - [x] LikeablePersonService 에서 Controller 부터 전달받은 entityId 값을 통해 해당 Row 삭제
+- [ ] Oauth2.0을 통해 Google 로그인 기능 추가
+  - [ ] Google key, 프로젝트 설정 파일에 추가
+  - [ ] SecurityConfig 에 Google 로그인 설정 추가
 
 ###N주차 미션 요약
 **[접근 방법]**
 
-체크리스트를 중심으로 각각의 기능을 구현하기 위해 어떤 생각을 했는지 정리합니다.
+**호감 목록 삭제 기능**
+1. list.html 파일에서 어떤 URI 를 원하는지 확인 -> /likeablePerson/delete/{id} -> id 값을 PathVariable 형식으로 GET 방식 
+2. Controller 에서 @GetMapping("/delete/{id}") 방식으로 접근
+3. Service 에서 삭제 기능을 구현 -> 현재 로그인 되어있는 정보와 PathVariable 방식으로 보낸 삭제하고자 하는 id 값을 파라미터로 Service로 전달
+4. Service 에서 구현중 예외 처리할 경우 고려
+   1. LikeablePersonRepository 에서 id를 통해 Optional< LikeablePerson > 객체를 가져오므로 비어있을 경우 고려 -> .isEmpty()
+   2. 로그인 되어있는 상태로 호감목록을 볼 수 있어 발생경우는 매우 적지만 로그인 되어있는 사용자의 인스타 아이디와  호감목록의 정보가 일치하지 않는 경우 고려
+5. 삭제 완료 메시지와 삭제된 객체를 RsData 객체에 담아 반환
+6. Controller 에서 list 목록을 다시 띄우기 위해 Redirect
 
-- 무엇에 중점을 두고 구현하였는지, 어떤 공식문서나 예제를 참고하여 개발하였는지 뿐만 아니라 미션을 진행하기 전 개인적으로 실습한 것도 포함하여 작성해주시기 바랍니다.
-- 실제 개발 과정에서 목표하던 바가 무엇이었는지 작성해주시기 바랍니다.
-- 구현 과정에 따라 어떤 결과물이 나오게 되었는지 최대한 상세하게 작성해주시기 바랍니다.
+**Google 로그인**
+1. Google 로그인 API key를 발급
+2. ...
 
 **[특이사항]**
 
-구현 과정에서 아쉬웠던 점 / 궁금했던 점을 정리합니다.
 
-- 추후 리팩토링 시, 어떤 부분을 추가적으로 진행하고 싶은지에 대해 구체적으로 작성해주시기 바랍니다.
-
-    **참고: [Refactoring]**
-
-  - Refactoring 시 주로 다루어야 할 이슈들에 대해 리스팅합니다.
-  - 1차 리팩토링은 기능 개발을 종료한 후, 스스로 코드를 다시 천천히 읽어보면서 진행합니다. 
-  - 2차 리팩토링은 피어리뷰를 통해 전달받은 다양한 의견과 피드백을 조율하여 진행합니다. 
+**[Refactoring]**
+1. Delete 기능을 POST 방식으로 호출
+2. Controller 에서 다루는 @Valid 데이터를 클래스 분리
