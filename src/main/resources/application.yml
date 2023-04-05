@@ -10,6 +10,16 @@ spring:
     oauth2:
       client:
         registration:
+          google:
+            client-id: 679995282720-p2pd0mjes8tics40sq6cat1is6me092u.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+            client-name: Google
+            authorization-grant-type: authorization_code
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-authentication-method: POST
+            provider-uri:
+
           kakao:
             clientId: 622130385bc3c249f8b2da61aac37908
             scope:

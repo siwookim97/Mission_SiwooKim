@@ -9,8 +9,8 @@
   - [x] Rq 로부터 가져온 Member Entity 의 instaMemberId 컬럼과 LikeablePerson 의 fromInstaMemberId 컬럼의 값이 같은지 확인 
   - [x] LikeablePersonService 에서 Controller 부터 전달받은 entityId 값을 통해 해당 Row 삭제
 - [ ] Oauth2.0을 통해 Google 로그인 기능 추가
-  - [ ] Google key, 프로젝트 설정 파일에 추가
-  - [ ] SecurityConfig 에 Google 로그인 설정 추가
+  - [x] Google key, 프로젝트 설정 파일에 추가
+  - [ ] Google API 인가 코드 받기
 
 ###N주차 미션 요약
 **[접근 방법]**
@@ -27,11 +27,13 @@
 
 **Google 로그인**
 1. Google 로그인 API key를 발급
-2. ...
+2. Google API 인가 코드 받기
 
 **[특이사항]**
-
+1. Google API를 통해 로그인은 되지만 인증 정보를 받을 수 없어 환경설정을 만져 보았지만 실패
+2. postman을 사용하여 애플리케이션을 테스트 해보고 싶은데 인증 정보를 어떻게 보내는지 
 
 **[Refactoring]**
 1. Delete 기능을 POST 방식으로 호출
 2. Controller 에서 다루는 @Valid 데이터를 클래스 분리
+3. Google 로그인 구현
