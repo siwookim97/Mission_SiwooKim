@@ -47,7 +47,7 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData<LikeablePerson> deleteLike(Member member, int likeableId) {
+    public RsData<LikeablePerson> deleteLike(Member member, long likeableId) {
         Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findById(likeableId);
         if (optionalLikeablePerson.isEmpty()) {
             return RsData.of("F-1", "호감목록 삭제를 실패했습니다. (해당 ID를 조회할 수 없음)");
