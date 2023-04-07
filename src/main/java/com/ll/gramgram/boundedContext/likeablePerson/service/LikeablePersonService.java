@@ -46,15 +46,17 @@ public class LikeablePersonService {
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
-    @Transactional
+    // 쿼리가 한번만 실행되므로 원자성을 유지할 필요가 없다
+    // @Transactional
     public RsData<LikeablePerson> deleteLike(Member member, long likeableId) {
+        // 예외1
         Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findById(likeableId);
         if (optionalLikeablePerson.isEmpty()) {
             return RsData.of("F-1", "호감목록 삭제를 실패했습니다. (해당 ID를 조회할 수 없음)");
         }
 
+        // 예외2
         LikeablePerson likeablePerson = optionalLikeablePerson.get();
-
         long loginedInstaMemberId = member.getInstaMember().getId();
         long likeablePersonFromInstaMemberId = likeablePerson.getFromInstaMember().getId();
         if (loginedInstaMemberId != likeablePersonFromInstaMemberId) {
