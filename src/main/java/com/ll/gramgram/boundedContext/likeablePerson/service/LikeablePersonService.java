@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,28 @@ public class LikeablePersonService {
         likeablePersonRepository.save(likeablePerson); // 저장
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    @Transactional
+    public RsData<LikeablePerson> deleteLike(Member member, long likeableId) {
+        // 예외1
+        Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findById(likeableId);
+        if (optionalLikeablePerson.isEmpty()) {
+            return RsData.of("F-1", "호감목록 삭제를 실패했습니다. (해당 ID를 조회할 수 없음)");
+        }
+
+        // 예외2
+        LikeablePerson likeablePerson = optionalLikeablePerson.get();
+        long verifiedInstaMemberId = member.getInstaMember().getId();
+        long likeablePersonFromInstaMemberId = likeablePerson.getFromInstaMember().getId();
+        if (verifiedInstaMemberId != likeablePersonFromInstaMemberId) {
+            return RsData.of("F-2",
+                    "호감목록 삭제를 실패했습니다. (호감 표시한 목록과 로그인한 인스타 ID가 일치하지 않음");
+        }
+
+        likeablePersonRepository.deleteById(likeableId);
+
+        return RsData.of("S-1", "호감목록 삭제완료(%d)".formatted(likeableId), likeablePerson);
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
