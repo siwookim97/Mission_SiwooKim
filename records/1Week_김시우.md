@@ -34,4 +34,3 @@
 
 **[Refactoring]**
 1. Entity 클래스와 Repository의 기본키 값일치 -> long
-2. Service 클래스의 delete 메서드 @Transactional 어노테이션 삭제 -> 하나의 쿼리만 실행하므로 원자성을 유지할 필요가 없다

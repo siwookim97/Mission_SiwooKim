@@ -56,9 +56,9 @@ public class LikeablePersonService {
 
         // 예외2
         LikeablePerson likeablePerson = optionalLikeablePerson.get();
-        long loginedInstaMemberId = member.getInstaMember().getId();
+        long verifiedInstaMemberId = member.getInstaMember().getId();
         long likeablePersonFromInstaMemberId = likeablePerson.getFromInstaMember().getId();
-        if (loginedInstaMemberId != likeablePersonFromInstaMemberId) {
+        if (verifiedInstaMemberId != likeablePersonFromInstaMemberId) {
             return RsData.of("F-2",
                     "호감목록 삭제를 실패했습니다. (호감 표시한 목록과 로그인한 인스타 ID가 일치하지 않음");
         }
