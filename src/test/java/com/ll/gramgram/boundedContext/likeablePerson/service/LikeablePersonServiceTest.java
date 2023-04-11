@@ -65,9 +65,9 @@ class LikeablePersonServiceTest {
     void failToAddLikeablePerson() {
         // when
         RsData<LikeablePerson> likeablePersonRsData1 =
-                likeablePersonService.like(member, "Insta_name2", 1);
+                likeablePersonService.like(member, "InstaName2", 1);
         RsData<LikeablePerson> likeablePersonRsData2 =
-                likeablePersonService.like(member, "Insta_name2", 1);
+                likeablePersonService.like(member, "InstaName2", 1);
         System.out.println(likeablePersonRsData1.getMsg());
         System.out.println(likeablePersonRsData2.getMsg());
 

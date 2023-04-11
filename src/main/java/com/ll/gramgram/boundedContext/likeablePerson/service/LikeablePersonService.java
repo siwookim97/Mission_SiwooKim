@@ -36,6 +36,10 @@ public class LikeablePersonService {
             return RsData.of("F-3", "이미 중복된 호감사유의 대상이 있습니다.");
         }
 
+        if (isLikeablePersonSizeOver(member.getInstaMember().getId())) {
+            return RsData.of("F-4", "10명 이상의 호감상대 등록은 불가합니다.");
+        }
+
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(member.getInstaMember()) // 호감을 표시하는 사람의 인스타 멤버
@@ -74,10 +78,16 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
-    public boolean isDuplicatedLikeablePerson(long fromInstaMemberId, long toInstaMemberId) {
+    private boolean isDuplicatedLikeablePerson(long fromInstaMemberId, long toInstaMemberId) {
         Optional<LikeablePerson> findLikeablePerson = likeablePersonRepository
                 .findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
 
         return findLikeablePerson.isPresent();
+    }
+
+    private boolean isLikeablePersonSizeOver(long fromInstaMemberId) {
+        List<LikeablePerson> likeablePeople = likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+
+        return likeablePeople.size() >= 10;
     }
 }
