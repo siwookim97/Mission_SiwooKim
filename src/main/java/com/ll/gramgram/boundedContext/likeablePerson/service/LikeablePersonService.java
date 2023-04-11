@@ -32,6 +32,10 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
+        if (isDuplicatedLikeablePerson(member.getInstaMember().getId(), toInstaMember.getId())) {
+            return RsData.of("F-3", "이미 중복된 호감사유의 대상이 있습니다.");
+        }
+
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(member.getInstaMember()) // 호감을 표시하는 사람의 인스타 멤버
@@ -48,13 +52,11 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> deleteLike(Member member, long likeableId) {
-        // 예외1
         Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findById(likeableId);
         if (optionalLikeablePerson.isEmpty()) {
             return RsData.of("F-1", "호감목록 삭제를 실패했습니다. (해당 ID를 조회할 수 없음)");
         }
 
-        // 예외2
         LikeablePerson likeablePerson = optionalLikeablePerson.get();
         long verifiedInstaMemberId = member.getInstaMember().getId();
         long likeablePersonFromInstaMemberId = likeablePerson.getFromInstaMember().getId();
@@ -70,5 +72,12 @@ public class LikeablePersonService {
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+    }
+
+    public boolean isDuplicatedLikeablePerson(long fromInstaMemberId, long toInstaMemberId) {
+        Optional<LikeablePerson> findLikeablePerson = likeablePersonRepository
+                .findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
+
+        return findLikeablePerson.isPresent();
     }
 }

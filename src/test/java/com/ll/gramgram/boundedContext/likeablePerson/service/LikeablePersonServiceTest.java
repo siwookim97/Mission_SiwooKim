@@ -28,22 +28,30 @@ class LikeablePersonServiceTest {
     private LikeablePerson likeablePerson;
 
     private final InstaMember instaMemberFrom = InstaMember.builder()
-            .createDate(LocalDateTime.now())
-            .modifyDate(LocalDateTime.now())
-            .username("Insta_name1")
+            .id(1000L)
+            .username("InstaName1")
             .gender("M")
             .build();
+
+    private final Member member = Member
+            .builder()
+            .providerTypeCode("GRAMGRAM")
+            .username("TestMember")
+            .password("1234")
+            .instaMember(instaMemberFrom)
+            .build();
+
     private final InstaMember instaMemberTo = InstaMember.builder()
-            .createDate(LocalDateTime.now())
-            .modifyDate(LocalDateTime.now())
-            .username("Insta_name2")
+            .id(1001L)
+            .username("InstaName2")
             .gender("F")
             .build();
+
     private final LikeablePerson likeablePerson1 = LikeablePerson.builder()
-            .createDate(LocalDateTime.now())
-            .modifyDate(LocalDateTime.now())
             .fromInstaMember(instaMemberFrom)
+            .fromInstaMemberUsername(instaMemberFrom.getUsername())
             .toInstaMember(instaMemberTo)
+            .toInstaMemberUsername(instaMemberTo.getUsername())
             .attractiveTypeCode(1)
             .build();
 
@@ -57,11 +65,13 @@ class LikeablePersonServiceTest {
     void failToAddLikeablePerson() {
         // when
         RsData<LikeablePerson> likeablePersonRsData1 =
-                likeablePersonService.like(new Member(), "Insta_name2", 1);
+                likeablePersonService.like(member, "Insta_name2", 1);
         RsData<LikeablePerson> likeablePersonRsData2 =
-                likeablePersonService.like(new Member(), "Insta_name2", 1);
+                likeablePersonService.like(member, "Insta_name2", 1);
+        System.out.println(likeablePersonRsData1.getMsg());
+        System.out.println(likeablePersonRsData2.getMsg());
 
         // then
-        assertThat(likeablePersonRsData2.isFail()).isFalse();
+        assertThat(likeablePersonRsData2.isFail()).isTrue();
     }
 }
