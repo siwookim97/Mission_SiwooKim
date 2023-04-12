@@ -6,6 +6,7 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
+import com.ll.gramgram.standard.util.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
-        if ( member.hasConnectedInstaMember() == false ) {
+        if (member.hasConnectedInstaMember() == false) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
@@ -33,7 +34,20 @@ public class LikeablePersonService {
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
         if (isDuplicatedLikeablePerson(member.getInstaMember().getId(), toInstaMember.getId())) {
-            return RsData.of("F-3", "이미 중복된 호감사유의 대상이 있습니다.");
+            if (!isLikeablePersonAttractiveTypeDiffer(member.getInstaMember().getId(), toInstaMember.getId(),
+                    attractiveTypeCode)) {
+                return RsData.of("F-3", "이미 중복된 호감사유의 대상이 있습니다.");
+            }
+            String attractiveTypeFrom = findByFromInstaMemberIdAndToInstaMemberId(member.getInstaMember().getId(),
+                    toInstaMember.getId()).getAttractiveTypeDisplayName();
+            LikeablePerson likeablePerson = updateLikeablePersonByAttractiveTypeCode(
+                    member.getInstaMember().getId(),
+                    toInstaMember.getId(),
+                    attractiveTypeCode);
+            likeablePersonRepository.save(likeablePerson);
+            String attractiveTypeTo = likeablePerson.getAttractiveTypeDisplayName();
+            return RsData.of("S-2", "(%s)에 대한 호감사유를 (%s)에서 (%s)으로 변경합니다."
+                    .formatted(username, attractiveTypeFrom, attractiveTypeTo), likeablePerson);
         }
 
         if (isLikeablePersonSizeOver(member.getInstaMember().getId())) {
@@ -51,7 +65,8 @@ public class LikeablePersonService {
 
         likeablePersonRepository.save(likeablePerson); // 저장
 
-        return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+        return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다."
+                .formatted(username), likeablePerson);
     }
 
     @Transactional
@@ -74,8 +89,15 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감목록 삭제완료(%d)".formatted(likeableId), likeablePerson);
     }
 
-    public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
+    public List<LikeablePerson> findByFromInstaMemberId(long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+    }
+
+    public LikeablePerson findByFromInstaMemberIdAndToInstaMemberId(long fromInstaMemberId, long toInstaMemberId) {
+        Optional<LikeablePerson> findLikeablePerson = likeablePersonRepository
+                .findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
+
+        return findLikeablePerson.get();
     }
 
     private boolean isDuplicatedLikeablePerson(long fromInstaMemberId, long toInstaMemberId) {
@@ -88,6 +110,24 @@ public class LikeablePersonService {
     private boolean isLikeablePersonSizeOver(long fromInstaMemberId) {
         List<LikeablePerson> likeablePeople = likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
 
-        return likeablePeople.size() >= 10;
+        return likeablePeople.size() >= Constants.MAXIMUN_LIKEABLEPERSON_COUNT;
+    }
+
+    private boolean isLikeablePersonAttractiveTypeDiffer(long fromInstaMemberId, long toInstaMemberId,
+                                                         int attractiveTypeCode) {
+        LikeablePerson findLikeablePerson = likeablePersonRepository
+                .findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId).get();
+        int likeableAttractiveType = findLikeablePerson.getAttractiveTypeCode();
+
+        return likeableAttractiveType != attractiveTypeCode;
+    }
+
+    private LikeablePerson updateLikeablePersonByAttractiveTypeCode(long fromInstaMemberId, long toInstaMemberId,
+                                                                    int attractiveTypeCode) {
+        LikeablePerson findLikeablePerson = likeablePersonRepository
+                .findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId).get();
+        findLikeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+
+        return findLikeablePerson;
     }
 }
