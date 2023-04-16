@@ -33,7 +33,7 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
-        if (isDuplicatedLikeablePerson(member.getInstaMember().getId(), toInstaMember.getId())) {
+        if (findOptionalLikeablePerson(member.getInstaMember().getId(), toInstaMember.getId()).isPresent()) {
             if (!isLikeablePersonAttractiveTypeDiffer(member.getInstaMember().getId(), toInstaMember.getId(),
                     attractiveTypeCode)) {
                 return RsData.of("F-3", "이미 중복된 호감사유의 대상이 있습니다.");
@@ -101,11 +101,6 @@ public class LikeablePersonService {
     // Optional에서 LikeablePerson 객체 반환
     private LikeablePerson findByFromInstaMemberIdAndToInstaMemberId(long fromInstaMemberId, long toInstaMemberId) {
         return findOptionalLikeablePerson(fromInstaMemberId, toInstaMemberId).get();
-    }
-
-    // Optional에서 LikeablePerson 객체 존재하는지 확인
-    private boolean isDuplicatedLikeablePerson(long fromInstaMemberId, long toInstaMemberId) {
-        return findOptionalLikeablePerson(fromInstaMemberId, toInstaMemberId).isPresent();
     }
 
     // Insta_Member의 호감목록 한계치 확인
