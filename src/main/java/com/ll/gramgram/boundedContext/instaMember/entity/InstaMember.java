@@ -111,18 +111,47 @@ public class InstaMember extends InstaMemberBase {
     public List<LikeablePerson> getToLikeablePeople(String gender, Integer attractiveTypeCode, Integer sortCode) {
         List<LikeablePerson> resultToLikeablePeople = this.toLikeablePeople;
 
+        resultToLikeablePeople = filterGender(gender, resultToLikeablePeople);
+        resultToLikeablePeople = filterAttractiveTypeCode(attractiveTypeCode, resultToLikeablePeople);
+
+        return resultToLikeablePeople;
+    }
+
+    private List<LikeablePerson> filterAttractiveTypeCode(Integer attractiveTypeCode, List<LikeablePerson> resultToLikeablePeople) {
+        if (attractiveTypeCode != null) {
+            if (attractiveTypeCode.equals(1)) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getAttractiveTypeCode() == 1)
+                        .collect(Collectors.toList());
+            } else if (attractiveTypeCode.equals(2)) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getAttractiveTypeCode() == 2)
+                        .collect(Collectors.toList());
+            } else if (attractiveTypeCode.equals(3)) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getAttractiveTypeCode() == 3)
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return resultToLikeablePeople;
+    }
+
+    private List<LikeablePerson> filterGender(String gender, List<LikeablePerson> resultToLikeablePeople) {
         if (gender != null) {
             if (gender.equals("M")) {
-                resultToLikeablePeople =
-                        resultToLikeablePeople.stream()
-                                .filter(person -> person.getFromInstaMember().gender.equals("M"))
-                                .collect(Collectors.toList());
-            }
-            else if (gender.equals("W")) {
-                resultToLikeablePeople =
-                        resultToLikeablePeople.stream()
-                                .filter(person -> person.getFromInstaMember().gender.equals("W"))
-                                .collect(Collectors.toList());
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getFromInstaMember().gender.equals("M"))
+                        .collect(Collectors.toList());
+            } else if (gender.equals("W")) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getFromInstaMember().gender.equals("W"))
+                        .collect(Collectors.toList());
             }
         }
 

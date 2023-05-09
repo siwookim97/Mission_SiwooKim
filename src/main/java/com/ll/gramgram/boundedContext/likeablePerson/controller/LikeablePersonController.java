@@ -127,10 +127,6 @@ public class LikeablePersonController {
                              @RequestParam(value = "sortCode", required = false) Integer sortCode) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
-        System.out.println("gender = " + gender);
-        System.out.println("attractiveTypeCode = " + attractiveTypeCode);
-        System.out.println("sortCode = " + sortCode);
-
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
