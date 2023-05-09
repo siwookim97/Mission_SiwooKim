@@ -9,6 +9,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -105,5 +106,26 @@ public class InstaMember extends InstaMemberBase {
                 .likesCountByGenderWomanAndAttractiveTypeCode2(likesCountByGenderWomanAndAttractiveTypeCode2)
                 .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
                 .build();
+    }
+
+    public List<LikeablePerson> getToLikeablePeople(String gender, Integer attractiveTypeCode, Integer sortCode) {
+        List<LikeablePerson> resultToLikeablePeople = this.toLikeablePeople;
+
+        if (gender != null) {
+            if (gender.equals("M")) {
+                resultToLikeablePeople =
+                        resultToLikeablePeople.stream()
+                                .filter(person -> person.getFromInstaMember().gender.equals("M"))
+                                .collect(Collectors.toList());
+            }
+            else if (gender.equals("W")) {
+                resultToLikeablePeople =
+                        resultToLikeablePeople.stream()
+                                .filter(person -> person.getFromInstaMember().gender.equals("W"))
+                                .collect(Collectors.toList());
+            }
+        }
+
+        return resultToLikeablePeople;
     }
 }
