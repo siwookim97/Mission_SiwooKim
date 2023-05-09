@@ -117,6 +117,24 @@ public class InstaMember extends InstaMemberBase {
         return resultToLikeablePeople;
     }
 
+    private List<LikeablePerson> filterGender(String gender, List<LikeablePerson> resultToLikeablePeople) {
+        if (gender != null) {
+            if (gender.equals("M")) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getFromInstaMember().gender.equals("M"))
+                        .collect(Collectors.toList());
+            } else if (gender.equals("W")) {
+                resultToLikeablePeople = resultToLikeablePeople
+                        .stream()
+                        .filter(person -> person.getFromInstaMember().gender.equals("W"))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return resultToLikeablePeople;
+    }
+
     private List<LikeablePerson> filterAttractiveTypeCode(Integer attractiveTypeCode, List<LikeablePerson> resultToLikeablePeople) {
         if (attractiveTypeCode != null) {
             if (attractiveTypeCode.equals(1)) {
@@ -133,24 +151,6 @@ public class InstaMember extends InstaMemberBase {
                 resultToLikeablePeople = resultToLikeablePeople
                         .stream()
                         .filter(person -> person.getAttractiveTypeCode() == 3)
-                        .collect(Collectors.toList());
-            }
-        }
-
-        return resultToLikeablePeople;
-    }
-
-    private List<LikeablePerson> filterGender(String gender, List<LikeablePerson> resultToLikeablePeople) {
-        if (gender != null) {
-            if (gender.equals("M")) {
-                resultToLikeablePeople = resultToLikeablePeople
-                        .stream()
-                        .filter(person -> person.getFromInstaMember().gender.equals("M"))
-                        .collect(Collectors.toList());
-            } else if (gender.equals("W")) {
-                resultToLikeablePeople = resultToLikeablePeople
-                        .stream()
-                        .filter(person -> person.getFromInstaMember().gender.equals("W"))
                         .collect(Collectors.toList());
             }
         }

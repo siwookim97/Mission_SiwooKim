@@ -12,10 +12,7 @@
 
 #### 선택 미션
 
-- [ ] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현
-
-- [ ] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능
-
+- [x] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현
 
 ---
 
@@ -31,6 +28,9 @@
 null값을 체크하기 위해서 Request를 사용하고자 하였지만 이미 Parameter 방식으로 받기에 3개의 파라미터 받아옴
 
 InstaMember Entity 클래스 에서 나를 호감하고 있는 사람을 List 필드로 다루고 있기에 Entity 클래스에서 get 메서드를 통해서 가져오도록 구현
+
+선택미션 1) - 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현<br><br>
+필수미션 1번의 메서드를 이용하면 손쉽게 호감사유로 필터링을 할 수 있다.
 
 **[특이사항]**
 
