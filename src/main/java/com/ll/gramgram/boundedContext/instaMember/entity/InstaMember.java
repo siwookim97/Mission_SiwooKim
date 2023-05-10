@@ -108,45 +108,12 @@ public class InstaMember extends InstaMemberBase {
                 .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
                 .build();
     }
-//
-//    public List<LikeablePerson> getToLikeablePeople() {
-//        return this.toLikeablePeople;
-//    }
 
     public List<LikeablePerson> getToLikeablePeople(String gender, Integer attractiveTypeCode, Integer sortCode) {
         List<LikeablePerson> resultToLikeablePeople = this.toLikeablePeople;
 
         resultToLikeablePeople = filterGender(gender, resultToLikeablePeople);
         resultToLikeablePeople = filterAttractiveTypeCode(attractiveTypeCode, resultToLikeablePeople);
-        if (sortCode != null) {
-            if (sortCode.equals(1)) {
-                resultToLikeablePeople = resultToLikeablePeople
-                        .stream()
-                        .sorted(Comparator.comparing(LikeablePerson::getModifyDate).reversed())
-                        .collect(Collectors.toList());
-            }
-            else if (sortCode.equals(2)) {
-                resultToLikeablePeople = resultToLikeablePeople
-                        .stream()
-                        .sorted(Comparator.comparing(LikeablePerson::getModifyDate))
-                        .collect(Collectors.toList());
-            }
-            else if (sortCode.equals(3)) {
-//                resultToLikeablePeople = resultToLikeablePeople
-//                        .stream()
-//                        .sorted(Comparator.comparing())
-//                        .collect(Collectors.toList());
-            }
-            else if (sortCode.equals(4)) {
-
-            }
-            else if (sortCode.equals(5)) {
-
-            }
-            else if (sortCode.equals(6)) {
-
-            }
-        }
 
         return resultToLikeablePeople;
     }
